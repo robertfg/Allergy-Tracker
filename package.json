@@ -1,0 +1,27 @@
+{
+  "name": "allergy-tracker",
+  "version": "1.0.0",
+  "description": "Code Louisville January 2018 Front End Web Development Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertfg/Allergy-Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robertfg/Allergy-Tracker/issues"
+  },
+  "homepage": "https://github.com/robertfg/Allergy-Tracker#readme",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
+}
