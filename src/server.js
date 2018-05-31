@@ -1,13 +1,19 @@
 // Require modules
 const express = require('express');
 const config  = require('./config');
+const path    = require('path');
 
 // Create application object
 const app = express();
 
+// Add this bEfore any routes
+const publicPath = path.resolve(__dirname, '../public');
+
+// Express will use this handler for all incoming requests:
+app.use(express.static(publicPath));
+
 // This sets up a simple router: you'll go to localhost:3030/doc
 app.use( '/blog', function(req, res, next) {
-  // Other: hit a database, get info. from weather api, generate a number, read a file
   res.end("This is my first blog post.");
 });
 
