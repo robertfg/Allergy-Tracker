@@ -1,29 +1,26 @@
-// Require modules
-const express = require('express');
-const config  = require('./config');
-const path    = require('path');
+/*  **********  REQUIREMENTS  **********  */
+const express    = require('express');
+const bodyParser = require('body-parser');
+const config     = require('./config');
+const router     = require('./routes');
+const path       = require('path');
+// import express, { static } from "express";
+// import { port, appName } from "./config";
+// import { resolve } from "path";
 
 // Create application object
 const app = express();
 
-// Add this bEfore any routes
+// Add this before any routes
 const publicPath = path.resolve(__dirname, '../public');
 
 // Express will use this handler for all incoming requests:
-app.use(express.static(publicPath));
+app.use( express.static(publicPath) );
 
-// This sets up a simple router: you'll go to localhost:3030/doc
-app.use( '/blog', function(req, res, next) {
-  res.end("This is my first blog post.");
-});
-
-// Tell it what to do:
-app.use( function(req, res, next) {
-  res.end("Hello Allergy Tracker!");
-});
+// Use new router.  Prepend /api to all paths defined in router.
+app.use('/api', router);
 
 // Start the server
 app.listen( config.port, function() {
   console.log(`${config.appName} is listening on port ${config.port}.`);
 });
-

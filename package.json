@@ -2,9 +2,10 @@
   "name": "allergy-tracker",
   "version": "1.0.0",
   "description": "Code Louisville January 2018 Front End Web Development Project",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/robertfg/Allergy-Tracker#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "eslint": "^4.19.1",
     "express": "^4.16.3"
   },
