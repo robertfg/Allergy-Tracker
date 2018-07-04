@@ -1,27 +1,30 @@
 /*  **********  Requirements  **********  */
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 /* ********* TEST SUITE NO.1 ********** */
 describe('CRUD Operations', () => {
 
-  let checkTestData = require('../src/routes');
-  let myUser;
-  let myUsers;
+  const checkTestData = require('../src/routes');
 
   // Phony data for testing
   before( () => {
-    myUser = { firstName: 'Robert', lastName: 'Glover' };
-    myUsers = [
-      { firstName: 'Robert', lastName: 'Glover' },
-      { firstName: 'Noreen', lastName: 'Goodwin' },
-      { firstName: 'Douglas', lastName: 'Carroll' },
-      { firstName: 'Jeanmarie', lastName: 'Willis' },
+    const myUser = {
+      id:         'a',
+      firstName:  'Robert',
+      lastName:   'Glover',
+      email:      'robert_f_g@hotmail.com'
+    };
+    const myUsers = [
+      { id: 'a', firstName: 'Robert',    lastName: 'Glover',  email: 'robert_f_g@hotmail.com' },
+      { id: 'b', firstName: 'Noreen',    lastName: 'Goodwin', email: 'noreen.goodwin@somewhere.com' },
+      { id: 'c', firstName: 'Douglas',   lastName: 'Carroll', email: 'doug.carroll@nowhere.com' },
+      { id: 'd', firstName: 'Jeanmarie', lastName: 'Willis',  email: 'jwillis@anywhere.com' }
     ];
   });
 
   // TEST SPEC NO.1
-  it('ought to add a user', () => {
-    expect(true).to.be.ok;
+  it('ought to list a user', () => {
+    expect( fetch('/api/myUser') ).to.be.ok;
     // expect(true).to.be.ok;
   });
 
