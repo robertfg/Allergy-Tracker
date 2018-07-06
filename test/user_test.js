@@ -24,7 +24,7 @@ describe('CRUD Operations', () => {
 
   // TEST SPEC NO.1
   it('ought to list a user', () => {
-    expect( fetch('/api/myUser') ).to.be.ok;
+    expect( fetch('/myUser') ).to.be.ok;
     // expect(true).to.be.ok;
   });
 
