@@ -21,6 +21,12 @@ app.use(express.static(publicPath));
 // Body parser will parse JSON data
 app.use(bodyParser.json());
 
+// Set pug as the view engine
+app.set('view engine', 'pug');
+
+const viewPath = path.resolve(__dirname, '../views');
+app.set('views', __dirname + viewPath);
+
 // Use new router.  Prepend /api to all paths defined in router.
 app.use('/api', router);
 
