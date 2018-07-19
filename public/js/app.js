@@ -1,6 +1,6 @@
 // Fetch data from the API (server)
 getUsers = () => {
-  return fetch('/api/user')
+  return fetch('/admin')
     .then(response => response.json())
     .then(users => {
       return users;
@@ -9,13 +9,12 @@ getUsers = () => {
 }
 
 // Render a list of users
-renderUsers = (users) => {
+renderUsers = users => {
   const listItems = users.map(user => `
     <li class="list-group-item">
-      <strong>${user.lastName}</strong>, ${user.firstName}, ${user.email}
+      <strong>${user.userName}</strong>, ${user.firstName} ${user.lastName}, ${user.email}
       <span class="pull-right">
-        <button type="button" class="btn btn-xs btn-default" onclick="handleEditUserClick(this)"   data-userId="${user._id}">Edit</button>
-        <button type="button" class="btn btn-xs btn-danger"  onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Del</button>
+        <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
       </span>
     </li>`);
   const html = `<ul class="list-group">${listItems.join('')}</ul>`;
@@ -35,30 +34,34 @@ refreshUserList = () => {
 // Clear/populate the form
 setForm = ( data={} ) => {
   const user = {
+    userName:  data.userName || '',
     firstName: data.firstName || '',
     lastName:  data.lastName || '',
     email:     data.email || '',
+    password:  data.password || '',
     _id:       data._id || ''
   };
 
   // Set values
-  $('#user-firstName').val(user.firstName),
-  $('#user-lastName').val(user.lastName),
-  $('#user-email').val(user.email)
-  $('#user-id').val(user._id)
+  $('#userName').val(user.userName),
+  $('#firstName').val(user.firstName),
+  $('#lastName').val(user.lastName),
+  $('#email').val(user.email)
+  $('#password').val(user.password)
+  $('#userid').val(user._id)
 
   // Change legend
   if (user._id) {
-    $('#form-label').text("Edit User");
+    $('#form-label').text("Edit your profile information:");
   } else {
-    $('#form-label').text("Add User");
+    $('#form-label').text("Enter your registration information:");
   }
 }
 
 // Delete a user
-deleteUser = (userId) => {
+deleteUser = userId => {
   // Set the url for the user to delete
-  const url = '/api/user/' + userId;
+  const url = '/admin/user/' + userId;
 
   // Delete the user by "fetching" the DELETE route.
   fetch(url, {
@@ -74,20 +77,26 @@ deleteUser = (userId) => {
   });
 }
 
-
 /*  **********  BUTTON CLICK HANDLERS  **********  */
 
 // Submit: add or update
 submitUserForm = () => {
+  
   const userData = {
-    firstName: $('#user-firstName').val(),
-    lastName: $('#user-lastName').val(),
-    email: $('#user-email').val(),
-    _id: $('#user-id').val()
+    userName:   $('#userName').val(),
+    firstName:  $('#firstName').val(),
+    lastName:   $('#lastName').val(),
+    email:      $('#email').val(),
+    password:   $('#password').val(),
+    _id:        $('#userid').val()
   };
 
   // Validate
-  if ( userData.firstName === ''  ||  userData.lastName ===  ''  || userData.email === '' ) {
+  if ( userData.userName  === ''  ||
+       userData.firstName === ''  ||
+       userData.lastName  === ''  ||
+       userData.email     === ''  ||
+       userData.password  === ''  ) {
     alert("You must complete all fields!");
     setForm();
     return;
@@ -97,22 +106,22 @@ submitUserForm = () => {
   let method, url;
   if (userData._id) {
     method = 'PUT';
-    url = '/api/user/' + userData._id;
+    url = '/profile/' + userData._id;
   } else {
     method = 'POST';
-    url = '/api/user';
+    url = '/signup/user';
   }
 
   // Update or Create:
   fetch(url, {
-    method: method,
+    method:  method,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData)
+    body:    JSON.stringify(userData)
   })
   .then(response => response.json())
   .then(user => {
     setForm();
-    refreshUserList();
+    // refreshUserList();
   })
   .catch(err => {
     console.error("A terrible thing has happened", err);
@@ -120,10 +129,10 @@ submitUserForm = () => {
 }
 
 // Cancel
-cancelUserForm = () => setForm();
+clearUserForm = () => setForm();
 
 // Edit
-handleEditUserClick = (element) => {
+handleEditUserClick = element => {
   const userId = element.getAttribute('data-userId');
   const user = window.userList.find(user => user._id === userId);
   if (user) {
@@ -132,7 +141,7 @@ handleEditUserClick = (element) => {
 }
 
 // Delete
-handleDeleteUserClick = (element) => {
+handleDeleteUserClick = element => {
   const userId = element.getAttribute('data-userId');
   if ( confirm("Are you sure?") ) {
     deleteUser(userId);

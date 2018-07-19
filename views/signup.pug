@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 #{title}
+
+        // Registration form
+        form(id='add-user-form')
+          legend#form-label Enter your registration information:
+          div.form-group
+            label(for='username') Username:
+            input#userName.form-control(type='text', placeholder='user name', name='username')
+
+          // Form fields:
+          include includes/form
+
+          button#form-submit.btn.btn-success(type='submit', onclick="submitUserForm()" ) Sign Up
+          button#form-clear.btn.btn-link(type='clear', onclick="clearUserForm()" ) Clear Form

@@ -1,0 +1,28 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+  a.navbar-brand(href='/') Allergy Tracker
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarText', aria-controls='navbarText', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarText.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li.nav-item.active
+        a.nav-link(href='/')
+          | Home 
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link(href='/about') About
+      li.nav-item
+        a.nav-link(href='/resources') Resources
+      li.nav-item
+        a.nav-link(href='/contact') Contact
+      li.nav-item
+        a.nav-link(href='faqs') FAQs
+    span.navbar-text
+
+      if currentUser
+        a.nav-item.nav-link(href='profile') My Profile
+        div
+          img.avatar.img-circle.hidden-xs-down(src='/img/avatar.png', alt='avatar')
+          a.btn.btn-light.pull-md-right(href='/logout') Log Out
+      else
+        a.btn.btn-info.pull-md-right(href='signup') Sign Up
+        a.btn.btn-info.pull-md-right(href='login') Log In

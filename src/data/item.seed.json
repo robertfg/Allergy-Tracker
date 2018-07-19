@@ -1,0 +1,29 @@
+[
+  { 
+    "item": "ammonia"
+  },
+  { 
+    "item": "formaldehyde"
+  },
+  { 
+    "item": "milk"
+  },
+  {
+    "item": "peanuts"
+  },
+  { 
+    "item": "shellfish"
+  },
+  { 
+    "item": "soy"
+  },
+  { 
+    "item": "strawberries"
+  },
+  { 
+    "item": "tree nuts"
+  },
+  { 
+    "item": "wheat"
+  }
+]
