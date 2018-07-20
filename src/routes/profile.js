@@ -18,22 +18,16 @@ router.get('/:userId', (req, res, next) => {
   // res.json(user);
   // res.render('profile', { title: 'Profile' });
 
-  // if ( !req.session.userId ) {
-  if ( !userId ) {
-    const err = new Error('You are not authorized to view this page.');
-    err.status = 403;
-    return next(err);
-  }
-
   // Find the user in Mongo
   // User.findById(req.session.userId)
-  User.find({ "userName": userId })
-  .exec( function(error, user) {
+
+  User.findOne({ "userName": userId })
+  .exec( (error, user) => {
     if ( error ) {
       return next(error);
     } else {
       // res.json(user);
-      res.render('profile', { title: 'Profile' });
+      res.render('profile', { title: 'Profile', user: user });
     }
   });
 });
@@ -43,7 +37,8 @@ router.put('/:userId', (req, res, next) => {
   const { userId } = req.params;
   
   // Get the user
-  User.findById(userId, function(err, user) {
+  // User.findById(userId, function(err, user) {
+  User.findOne({ "userName": userId }, (err, user) => {
     if (err) {
       console.error(err);
       return res.status(500).json(err);
@@ -51,7 +46,9 @@ router.put('/:userId', (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-  
+
+    console.dir( req.body );
+    
     // Set the other values
     user.userName  = req.body.userName;
     user.firstName = req.body.firstName;
@@ -60,7 +57,7 @@ router.put('/:userId', (req, res, next) => {
     user.password  = req.body.password;
  
     // Save the updates
-    user.save(function(err, savedUser) {
+    user.save( (err, savedUser) => {
       if (err) {
         console.error(err);
         return res.status(500).json(err);

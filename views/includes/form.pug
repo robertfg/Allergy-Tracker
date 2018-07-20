@@ -1,16 +1,16 @@
 div.form-group
   label(for='firstname') First Name:
-  input#firstName.form-control(type='text', placeholder='first name', name='firstname')
+  input#firstName.form-control(type='text', placeholder='first name', name='firstname' value=user.firstName)
 div.form-group
   label(for='lastname') Last Name:
-  input#lastName.form-control(type='text', placeholder='last name', name='lastname')
+  input#lastName.form-control(type='text', placeholder='last name', name='lastname' value=user.lastName)
 div.form-group
   label(for='email') Email:
-  input#email.form-control(type='email', placeholder='name@email.com', name='email')
+  input#email.form-control(type='email', placeholder='name@email.com', name='email' value=user.email)
 div.form-group
   label(for='password') Password:
-  input#password.form-control(type='password', name='password')
+  input#password.form-control(type='password', name='password' value=user.password)
 div.form-group
   label(for='password2') Confirm Password:
-  input#password2.form-control(type='password', name='confirmPassword')
-input#userid(type='hidden' value='')
+  input#password2.form-control(type='password', name='confirmPassword' value=user.password)
+input#userid(type="hidden" value=user._id)

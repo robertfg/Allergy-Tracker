@@ -61,7 +61,7 @@ setForm = ( data={} ) => {
 // Delete a user
 deleteUser = userId => {
   // Set the url for the user to delete
-  const url = '/admin/user/' + userId;
+  const url = '/admin/' + userId;
 
   // Delete the user by "fetching" the DELETE route.
   fetch(url, {
@@ -70,7 +70,13 @@ deleteUser = userId => {
   })
   .then(response => response.json())
   .then(response => {
-    refreshUserList();
+    // refreshUserList();
+    fetch('/admin');
+    // .then(response => response.json())
+    // .then(users => {
+    //   return users;
+    // })
+    // .catch(error => console.error("GET USERS:", error));
   })
   .catch(err => {
     console.error("I'm not dead yet!", err);
@@ -106,7 +112,8 @@ submitUserForm = () => {
   let method, url;
   if (userData._id) {
     method = 'PUT';
-    url = '/profile/' + userData._id;
+    // url = '/profile/' + userData._id;
+    url = '/profile/' + userData.userName;
   } else {
     method = 'POST';
     url = '/signup/user';
@@ -143,6 +150,7 @@ handleEditUserClick = element => {
 // Delete
 handleDeleteUserClick = element => {
   const userId = element.getAttribute('data-userId');
+  
   if ( confirm("Are you sure?") ) {
     deleteUser(userId);
   }

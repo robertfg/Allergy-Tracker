@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 // GET /signup
 router.get('/', (req, res, next) => {
-  res.render('signup', { title: 'Sign Up' });
+  res.render('signup', { title: 'Sign Up', user: {} });
 });
 
 // ***** Create

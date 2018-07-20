@@ -22,11 +22,11 @@ const app = express();
 // Connect to MongoDB and create/use database as configured
 mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
 
-// Set publicPath to the public folder as the location of static files
+// 2. Set publicPath to the public folder as the location of static files
 const publicPath = path.resolve(__dirname, '../public');
 app.use(express.static(publicPath));
 
-// Body parser will parse JSON data
+// 1. Body parser will parse JSON data
 app.use(bodyParser.json());
 
 // Set pug as the view engine

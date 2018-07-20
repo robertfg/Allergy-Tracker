@@ -5,16 +5,14 @@ block content
     .row
       .col-md-6.col-md-offset-3
         h1.display-4.m-b-2 #{title}
-
         // Profile form
         form(id='add-user-form')
           legend#form-label Edit your profile information:
+          div.form-group
+            input#userName.form-control(type='hidden', placeholder='user name', name='username' value=user.userName)
 
           // Form fields:
           include includes/form
 
-          button#form-submit.btn.btn-success(type='submit', onclick="submitUserForm()" ) Update
-
-block scripts
-  script(src='js/loadProfile.js')
+          button#form-submit.btn.btn-success(type='submit', onclick='submitUserForm()' ) Update
   

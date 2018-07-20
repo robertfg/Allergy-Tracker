@@ -2,4 +2,11 @@ extends layout
 
 block content
   h1 List of Users
-    .main.container.text-xs-center#list-containter
+  ul.list-group
+    each user in users
+      //li.list-group-item= user.userName
+      li.list-group-item
+        strong= user.userName
+        normal &#32;- #{user.firstName} #{user.lastName}, #{user.email}  
+        span.float-right
+          button.btn.btn-xs.btn-danger(type='button', onclick='handleDeleteUserClick(this)', data-userid=user._id) Delete
