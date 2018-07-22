@@ -58,11 +58,36 @@ setForm = ( data={} ) => {
   }
 }
 
-// Delete a user
-deleteUser = userId => {
+// Toggle deleted field
+toggleDeleted = userId => {
   // Set the url for the user to delete
   const url = '/admin/' + userId;
 
+  // Delete the user by "fetching" the DELETE route.
+  fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(response => {
+    // refreshUserList();
+    fetch('/admin');
+    // .then(response => response.json())
+    // .then(users => {
+    //   return users;
+    // })
+    // .catch(error => console.error("GET USERS:", error));
+  })
+  .catch(err => {
+    console.error("Inability to toggle value of deleted field!", err);
+  });
+}
+
+// Delete a user
+deleteUser = userId => {
+  // Set the url for the user to delete
+  const url = '/admin/' + userId;  
+  
   // Delete the user by "fetching" the DELETE route.
   fetch(url, {
     method: 'DELETE',
@@ -147,10 +172,19 @@ handleEditUserClick = element => {
   }
 }
 
+// Toggle Deleted status
+handleToggleClick = element => {
+  const userId = element.getAttribute('data-userId');
+  
+  if ( confirm("Are you sure?") ) {
+    toggleDeleted(userId);
+  }
+}
+
 // Delete
 handleDeleteUserClick = element => {
   const userId = element.getAttribute('data-userId');
-  
+
   if ( confirm("Are you sure?") ) {
     deleteUser(userId);
   }
