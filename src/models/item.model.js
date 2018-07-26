@@ -1,18 +1,18 @@
 /*  **********  REQUIREMENTS  **********  */
 const mongoose = require('mongoose');
-//const users    = require('../data/user.seed.json');
-  
+const items    = require('../data/item.seed.json');
+
 
 /*  **********  SCHEMA  **********  */
 
 // Create a schema
-const itemSchema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
   item:   String,
   created_at: { type: Date, default: Date.now },
   deleted:    { type: Boolean, default: false }
 });
 
-const Item = mongoose.model("Item", itemSchema);
+const Item = mongoose.model("Item", ItemSchema);
 
 // Seed data
 Item.count( {}, (err, count) => {
@@ -35,4 +35,4 @@ Item.count( {}, (err, count) => {
 
 
 /*  **********  EXPORTS **********  */
-module.exports = User;
+module.exports = Item;

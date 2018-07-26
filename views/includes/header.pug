@@ -9,22 +9,20 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
           | Home 
           span.sr-only (current)
       li.nav-item
-        a.nav-link(href='about') About
+        a.nav-link(href='/about') About
       li.nav-item
-        a.nav-link(href='resources') Resources
+        a.nav-link(href='/resources') Resources
       li.nav-item
-        a.nav-link(href='contact') Contact
+        a.nav-link(href='/contact') Contact
       li.nav-item
-        a.nav-link(href='faqs') FAQs
-      li.nav-item
-        a.nav-link(href='admin') Admin
-    span.navbar-text
-
+        a.nav-link(href='/faqs') FAQs
       if currentUser
-        a.nav-item.nav-link(href='profile') My Profile
-        div
-          img.avatar.img-circle.hidden-xs-down(src='/img/avatar.png', alt='avatar')
-          a.btn.btn-light.pull-md-right(href='/logout') Log Out
+        li.nav-item
+          a.nav-link(href='/admin') Admin
+        li.nav-item
+          a.nav-item.nav-link(href='/profile') My Profile
+    form.form-inline
+      if !currentUser
+        button.btn.btn-info.pull-md-right(type='/login') Log In
       else
-        a.btn.btn-info.pull-md-right(href='signup') Sign Up
-        a.btn.btn-info.pull-md-right(href='login') Log In
+        button.btn.btn-info.pull-md-right(type='/logoff') Log Off

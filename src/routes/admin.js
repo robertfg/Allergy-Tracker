@@ -10,24 +10,18 @@ const User = mongoose.model('User');
 
 // GET /admin (list)
 router.get('/', (req, res, next) => {
-  // User.find({deleted: {$ne: true}}, (err, users) => {
-  // Get the users
   User.find({}, (err, users) => {
     if (err) {
       console.log(err);
       return res.status(500).json(err);
     }
-  // res.json(users);
   res.render('admin', { title: 'Administator', users: users });
   });
 });
 
 //  PUT /admin/id (toggle deleted field)
 router.put('/:userId', (req, res, next) => {
-  // Deconstruct the userId from the parameters: /admin/<user._id>
   const { userId } = req.params;
-
-  // Get the user
   User.findById(userId, (err, user) => {
     if (err) {
       console.log(err);
@@ -52,28 +46,14 @@ router.put('/:userId', (req, res, next) => {
 
 // DELETE /admin
 router.delete('/:userId', (req, res, next) => {
-  // Deconstruct the userId from the parameters: /admin/<user._id>
   const { userId } = req.params;
-  
-  // Get the user
-  // User.findById(userId, (err, user) => {
-  //   if (err) {
-  //     console.log(err);
-  //     return res.status(500).json(err);
-  //   }
-  // // res.json(users);
-  // res.render('admin', { title: 'Administator', users: users });
-  // });
 
-    // Delete the user 
+  // Delete the user
   User.deleteOne({ "_id": userId }, err => {
     if (err) {
       console.log(err);
       return res.status(500).json(err);
     }
-    // else {
-    //   res.render('admin', { title: 'Administator', users: users });
-    // }
   });
 });
 

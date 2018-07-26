@@ -1,45 +1,12 @@
-// Fetch data from the API (server)
-getUsers = () => {
-  return fetch('/admin')
-    .then(response => response.json())
-    .then(users => {
-      return users;
-    })
-    .catch(error => console.error("GET USERS:", error));
-}
-
-// Render a list of users
-renderUsers = users => {
-  const listItems = users.map(user => `
-    <li class="list-group-item">
-      <strong>${user.userName}</strong>, ${user.firstName} ${user.lastName}, ${user.email}
-      <span class="pull-right">
-        <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
-      </span>
-    </li>`);
-  const html = `<ul class="list-group">${listItems.join('')}</ul>`;
-  return html;
-}
-
-// Fetch users from the API and render to the page: tie getUsers and renderUsers together
-refreshUserList = () => {
-  getUsers()
-  .then(users => {
-    window.userList = users;
-    const html = renderUsers(users);
-    $('#list-container').html(html);
-  });
-}
-
 // Clear/populate the form
 setForm = ( data={} ) => {
   const user = {
-    userName:  data.userName || '',
+    userName:  data.userName  || '',
     firstName: data.firstName || '',
-    lastName:  data.lastName || '',
-    email:     data.email || '',
-    password:  data.password || '',
-    _id:       data._id || ''
+    lastName:  data.lastName  || '',
+    email:     data.email     || '',
+    password:  data.password  || '',
+    _id:       data._id       || ''
   };
 
   // Set values
@@ -70,13 +37,7 @@ toggleDeleted = userId => {
   })
   .then(response => response.json())
   .then(response => {
-    // refreshUserList();
     fetch('/admin');
-    // .then(response => response.json())
-    // .then(users => {
-    //   return users;
-    // })
-    // .catch(error => console.error("GET USERS:", error));
   })
   .catch(err => {
     console.error("Inability to toggle value of deleted field!", err);
@@ -95,13 +56,7 @@ deleteUser = userId => {
   })
   .then(response => response.json())
   .then(response => {
-    // refreshUserList();
     fetch('/admin');
-    // .then(response => response.json())
-    // .then(users => {
-    //   return users;
-    // })
-    // .catch(error => console.error("GET USERS:", error));
   })
   .catch(err => {
     console.error("I'm not dead yet!", err);
@@ -119,17 +74,27 @@ submitUserForm = () => {
     lastName:   $('#lastName').val(),
     email:      $('#email').val(),
     password:   $('#password').val(),
+    password2:  $('#password2').val(),
     _id:        $('#userid').val()
   };
 
   // Validate
-  if ( userData.userName  === ''  ||
-       userData.firstName === ''  ||
-       userData.lastName  === ''  ||
-       userData.email     === ''  ||
-       userData.password  === ''  ) {
-    alert("You must complete all fields!");
-    setForm();
+  if ( userData.userName   === ''  ||
+       userData.firstName  === ''  ||
+       userData.lastName   === ''  ||
+       userData.email      === ''  ||
+       userData.password   === ''  ||
+       userData.password2  === ''  ) {
+         alert("You must complete all fields!");
+
+    setForm(userData);
+    return;
+    }
+
+    // Confirm that user entered the correct password twice:
+  if ( userData.password !== userData.password2 ) {
+    alert("Passwords do not match!");
+    setForm(userData);
     return;
     }
 
@@ -138,10 +103,10 @@ submitUserForm = () => {
   if (userData._id) {
     method = 'PUT';
     // url = '/profile/' + userData._id;
-    url = '/profile/' + userData.userName;
+    url = '/profile';
   } else {
     method = 'POST';
-    url = '/signup/user';
+    url = '/signup';
   }
 
   // Update or Create:
@@ -151,10 +116,6 @@ submitUserForm = () => {
     body:    JSON.stringify(userData)
   })
   .then(response => response.json())
-  .then(user => {
-    setForm();
-    // refreshUserList();
-  })
   .catch(err => {
     console.error("A terrible thing has happened", err);
   }) 

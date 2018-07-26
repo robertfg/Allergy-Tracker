@@ -4,30 +4,63 @@ const bodyParser = require('body-parser');
 const config     = require('./config');
 const path       = require('path');
 const mongoose   = require('mongoose');
+const logger     = require('morgan');
 
+// Session handlers
+const session    = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+// Require models
 require('./models/user.model');
+require('./models/item.model');
 
 // Routes
 const router  = require('./routes');
-const signup  = require('./routes/signup');
-const profile = require('./routes/profile');
 const admin   = require('./routes/admin');
+const login   = require('./routes/login');
+const profile = require('./routes/profile');
+const signup  = require('./routes/signup');
 
 // Create application object
 const app = express();
 
-
 /*  **********  MIDDLEWARE  **********  */
+
+// Better logging with morgan
+app.use(logger("dev"));
 
 // Connect to MongoDB and create/use database as configured
 mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
+// let dbConn = mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
 
-// 2. Set publicPath to the public folder as the location of static files
+// Session handler
+app.use(session({
+  secret: 'Allergies are terrible.',
+  resave: true,
+  saveUninitialized: false,
+
+  // Add the MongoStore with the db connection (this must be after you call mongoose.connect to use db  )
+  // store: new MongoStore({
+  //   mongooseConnection: dbConn
+  // })
+}));
+
+// Make user id available to templates
+app.use( (req, res, next) => {
+  // currentUser only gets a value when a user is logged in: navbar, index
+  // res.locals.currentUser = req.session.userId;
+  res.locals.currentUser = 'test';
+  console.log("in server: ", res.locals.currentUser);
+  
+  next();
+});
+
+// Body parser will parse JSON data
+app.use(bodyParser.json());
+
+// Set publicPath to the public folder as the location of static files
 const publicPath = path.resolve(__dirname, '../public');
 app.use(express.static(publicPath));
-
-// 1. Body parser will parse JSON data
-app.use(bodyParser.json());
 
 // Set pug as the view engine
 app.set('view engine', 'pug');
@@ -37,9 +70,10 @@ app.set('views', viewPath);
 
 // Use new router.  Prepend /api to all paths defined in router.
 app.use('/',        router);
-app.use('/signup',  signup);
-app.use('/profile', profile);
 app.use('/admin',   admin);
+app.use('/login',   login);
+app.use('/profile', profile);
+app.use('/signup',  signup);
 
 
 /*  **********  BEGIN ERROR HANDLING  **********  */

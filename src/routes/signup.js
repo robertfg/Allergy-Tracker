@@ -2,6 +2,9 @@
 const router   = require('express').Router();
 const mongoose = require('mongoose');
 
+// Use the data model
+const User = mongoose.model('User');
+
 
 /*  **********  ROUTES  **********  */
 
@@ -10,14 +13,10 @@ router.get('/', (req, res, next) => {
   res.render('signup', { title: 'Sign Up', user: {} });
 });
 
-// ***** Create
-router.post('/user', (req, res, next) => {
-  
-  // Use the data model
-  const User = mongoose.model('User');
+// POST /signup  ***** Create
+router.post('/', (req, res, next) => {
 
-  // Set userData object
-  // const {userData } = req.body; This doesn't work!
+  // Set user data
   const userData =	{
     userName:   req.body.userName,
     firstName:  req.body.firstName,
@@ -25,16 +24,21 @@ router.post('/user', (req, res, next) => {
     email:      req.body.email,
     password:   req.body.password
   };
-  
-  // Add the new user to the database
-  User.create(userData, function(err, newUser) {
+
+  // // Add the new user to the database
+  User.create(userData, (err, user) => {
     if (err) {
       console.error(err);
       return res.status(500).json(err);
     }
-    res.json(newUser);
+    // Create session and cookie
+    req.session.userId = user._id;
+
+    // Redirect to profile page -> automatically logged in
+    return res.redirect('/');
   });
 });
+
 
 /*  **********  EXPORTS **********  */
 module.exports = router;

@@ -24,11 +24,6 @@ router.get('/faqs', (req, res, next) => {
   res.render('faqs', { title: 'FAQs' });
 });
 
-// GET /login
-router.get('/login', (req, res, next) => {
-  res.render('login', { title: 'Log In' });
-});
-
 // GET /resources
 router.get('/resources', (req, res, next) => {
   res.render('resources', { title: 'Resources' });
