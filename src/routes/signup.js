@@ -34,6 +34,8 @@ router.post('/', (req, res, next) => {
     // Create session and cookie
     req.session.userId = user._id;
 
+    console.log("signup:", req.session.userId);
+    
     // Redirect to profile page -> automatically logged in
     return res.redirect('/');
   });

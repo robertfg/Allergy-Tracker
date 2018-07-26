@@ -3,40 +3,37 @@ extends layout
 block content
   .main.container.text-xs-center
     h1 List of Users
-    //- ul.list-group
-    //-   each user in users
-    //-     //li.list-group-item= user.userName
-    //-     li.list-group-item
-    //-       strong= user.userName
-    //-       normal &#32;- #{user.firstName} #{user.lastName}, #{user.email}  
-    //-       span.float-right
-    //-         button.btn.btn-xs.btn-danger(type='button', onclick='handleDeleteUserClick(this)', data-userid=user._id) Delete
 
-  div.main.container
-    table.table.table-striped
-      thead.thead-dark
-        tr
-          th(scope='col') User Name
-          th(scope='col') First Name
-          th(scope='col') Last Name
-          th(scope='col') Email Address
-          th(scope='col') Status
-          th(scope='col')
-          th(scope='col')
-      tbody
-        each user in users
-          tr
-            th(scope='row')= user.userName
-            td= user.firstName
-            td= user.lastName
-            td= user.email
-            if user.deleted
-              td Deleted
-            else
-              td Active
-            td
-              span.float-right
-                button.btn.btn-xs.btn-default(type='button', onclick='handleToggleClick(this)', data-userid=user._id) Toggle Status
-            td
-              span.float-right
-                button.btn.btn-xs.btn-danger(type='button', onclick='handleDeleteUserClick(this)', data-userid=user._id) Hard Delete
+  .main.container
+    .header
+      .flex1 Username
+      .flex2 First Name
+      .flex3 Last Name
+      .flex4 Email Address
+      .flex5 Status
+      .flex6
+      .flex7
+      .flex8
+    each user in users
+      .content
+        .flex1= user.userName
+        .flex2= user.firstName
+        .flex3= user.lastName
+        .flex4= user.email
+        if user.deleted
+          .flex5 Deleted
+        else
+          .flex5 Active
+        .flex6
+          span.float-right
+            button.btn.btn-xs.btn-info(type='button', onclick='handleEditUserClick(this)', data-userid=user._id) Edit
+        .flex7
+          span.float-right
+            button.btn.btn-xs.btn-warning(type='button', onclick='handleToggleClick(this)', data-userid=user._id) Toggle Status
+        .flex8
+          span.float-right
+            button.btn.btn-xs.btn-danger(type='button', onclick='handleDeleteUserClick(this)', data-userid=user._id) Delete
+
+block scripts
+  script
+    const myUser=JSON.stringify(users)

@@ -30,26 +30,23 @@ const app = express();
 app.use(logger("dev"));
 
 // Connect to MongoDB and create/use database as configured
-mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
-// let dbConn = mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
+// mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
+let dbConn = mongoose.connection.openUri(`mongodb://${config.db.username}:${config.db.password}@${config.db.host}/${config.db.dbName}`);
 
 // Session handler
 app.use(session({
   secret: 'Allergies are terrible.',
   resave: true,
   saveUninitialized: false,
-
-  // Add the MongoStore with the db connection (this must be after you call mongoose.connect to use db  )
-  // store: new MongoStore({
-  //   mongooseConnection: dbConn
-  // })
+  store: new MongoStore({
+    mongooseConnection: dbConn
+  })
 }));
 
 // Make user id available to templates
 app.use( (req, res, next) => {
-  // currentUser only gets a value when a user is logged in: navbar, index
-  // res.locals.currentUser = req.session.userId;
-  res.locals.currentUser = 'test';
+  // res.locals.currentUser = '5b4febba4c76847cf44f5b6f';
+  res.locals.currentUser = req.session.userId;
   console.log("in server: ", res.locals.currentUser);
   
   next();
@@ -57,6 +54,7 @@ app.use( (req, res, next) => {
 
 // Body parser will parse JSON data
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set publicPath to the public folder as the location of static files
 const publicPath = path.resolve(__dirname, '../public');

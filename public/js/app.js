@@ -1,3 +1,36 @@
+// Fetch data from the API (server)
+getUsers = () => {
+  return fetch('/admin')
+    .then(response => response.json())
+    .then(users => {
+      return users;
+    })
+    .catch(error => console.error("GET USERS:", error));
+}
+
+// Render a list of users
+renderUsers = users => {
+  const listItems = users.map(user => `
+    <li class="list-group-item">
+      <strong>${user.userName}</strong>, ${user.firstName} ${user.lastName}, ${user.email}
+      <span class="pull-right">
+        <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
+      </span>
+    </li>`);
+  const html = `<ul class="list-group">${listItems.join('')}</ul>`;
+  return html;
+}
+
+// Fetch users from the API and render to the page: tie getUsers and renderUsers together
+refreshUserList = () => {
+  getUsers()
+  .then(users => {
+    window.userList = users;
+    const html = renderUsers(users);
+    $('#list-container').html(html);
+  });
+}
+
 // Clear/populate the form
 setForm = ( data={} ) => {
   const user = {
@@ -127,10 +160,12 @@ clearUserForm = () => setForm();
 // Edit
 handleEditUserClick = element => {
   const userId = element.getAttribute('data-userId');
-  const user = window.userList.find(user => user._id === userId);
-  if (user) {
-    setForm(user);
-  }
+
+  editUser(userId);
+//   const user = window.userList.find(user => user._id === userId);
+//   if (user) {
+//     setForm(user);
+//   }
 }
 
 // Toggle Deleted status

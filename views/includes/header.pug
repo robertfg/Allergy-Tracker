@@ -16,13 +16,13 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
         a.nav-link(href='/contact') Contact
       li.nav-item
         a.nav-link(href='/faqs') FAQs
-      if currentUser
-        li.nav-item
-          a.nav-link(href='/admin') Admin
-        li.nav-item
-          a.nav-item.nav-link(href='/profile') My Profile
-    form.form-inline
-      if !currentUser
-        button.btn.btn-info.pull-md-right(type='/login') Log In
-      else
-        button.btn.btn-info.pull-md-right(type='/logoff') Log Off
+      //- if currentUser
+      li.nav-item
+        a.nav-link(href='/admin') Admin
+        //- li.nav-item
+        //-   a.nav-link(href='/profile') My Profile
+    //- form.form-inline
+    //-   if currentUser
+    //-     a.btn.btn-light.pull-md-right(href='/logout') Log Out
+    //-   else
+    //-     a.btn.btn-info.pull-md-right(href='/login') Log In
