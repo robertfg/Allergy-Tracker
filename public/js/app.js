@@ -5,20 +5,30 @@ getUsers = () => {
     .then(users => {
       return users;
     })
-    .catch(error => console.error("GET USERS:", error));
+    .catch(error => console.error("Error getting users:", error));
 }
 
 // Render a list of users
 renderUsers = users => {
-  const listItems = users.map(user => `
-    <li class="list-group-item">
-      <strong>${user.userName}</strong>, ${user.firstName} ${user.lastName}, ${user.email}
-      <span class="pull-right">
+  const contentContainer = users.map(user => `
+    <div class="content">
+      <div class="flex1">${user.lastName}</div>
+      <div class="flex2">${user.firstName}</div>
+      <div class="flex3">${user.email}</div>
+      <div class="flex4">${user.deleted ? 'Inactive': 'Active'}</div>
+      <div class="flex5">
+        <button type="button" class="btn btn-xs btn-info" onclick="handleEditUserClick(this)" data-userId="${user._id}">Edit</button>
+      </div>
+      <div class="flex6">
+        <button type="button" class="btn btn-xs btn-warning" onclick="handleToggleUserClick(this)" data-userId="${user._id}">Toggle Status</button>
+      </div>
+      <div class="flex7">
+        <span class="pull-right">
         <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
-      </span>
-    </li>`);
-  const html = `<ul class="list-group">${listItems.join('')}</ul>`;
-  return html;
+      </div>
+    </div>
+    `);
+  return contentContainer;
 }
 
 // Fetch users from the API and render to the page: tie getUsers and renderUsers together
@@ -27,7 +37,7 @@ refreshUserList = () => {
   .then(users => {
     window.userList = users;
     const html = renderUsers(users);
-    $('#list-container').html(html);
+    $('#content-container').html(html);
   });
 }
 
@@ -36,10 +46,9 @@ setForm = ( data={} ) => {
   const user = {
     userName:  data.userName || '',
     firstName: data.firstName || '',
-    lastName:  data.lastName || '',
-    email:     data.email || '',
-    password:  data.password || '',
-    _id:       data._id || ''
+    lastName:  data.lastName  || '',
+    email:     data.email     || '',
+    _id:       data._id       || ''
   };
 
   // Set values
@@ -58,8 +67,27 @@ setForm = ( data={} ) => {
   }
 }
 
-// Toggle deleted field
-toggleDeleted = userId => {
+// Toggle user status
+toggleUser = userId => {
+  // Set the url for the user to delete
+  const url = '/api/toggle/user/' + userId;
+
+  // Toggle the active/inactive status.
+  fetch(url, {
+    method:   'PUT',
+    headers:  { 'Content-Type': 'application/json' },
+  })
+  .then(response => response.json())
+  .then(response => {
+    refreshUserList();
+  })
+  .catch(err => {
+    console.error("Unable to toggle the user's status.", err);
+  });
+}
+
+// Delete a user
+deleteUser = userId => {
   // Set the url for the user to delete
   const url = '/admin/' + userId;
 
@@ -104,7 +132,7 @@ deleteUser = userId => {
     // .catch(error => console.error("GET USERS:", error));
   })
   .catch(err => {
-    console.error("I'm not dead yet!", err);
+    console.error("Unable to delete the user.", err);
   });
 }
 
@@ -114,12 +142,10 @@ deleteUser = userId => {
 submitUserForm = () => {
   
   const userData = {
-    userName:   $('#userName').val(),
-    firstName:  $('#firstName').val(),
-    lastName:   $('#lastName').val(),
-    email:      $('#email').val(),
-    password:   $('#password').val(),
-    _id:        $('#userid').val()
+    firstName:  $('#user-firstName').val(),
+    lastName:   $('#user-lastName').val(),
+    email:      $('#user-email').val(),
+    _id:        $('#user-id').val()
   };
 
   // Validate
@@ -172,12 +198,11 @@ handleEditUserClick = element => {
   }
 }
 
-// Toggle Deleted status
-handleToggleClick = element => {
+// Toggle status
+handleToggleUserClick = element => {
   const userId = element.getAttribute('data-userId');
-  
   if ( confirm("Are you sure?") ) {
-    toggleDeleted(userId);
+    toggleUser(userId);
   }
 }
 

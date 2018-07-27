@@ -1,9 +1,37 @@
-/* =================================
-  Import normalize.css
-	==================================== */
-@import url('http://necolas.github.io/normalize.css/3.0.2/normalize.css');
-
-* {
-	box-sizing: border-box;
+.main {
+	padding:					20px;
 }
-
+.header {
+	background:			Black;
+	display:					flex;
+	flex-wrap:				wrap;
+	justify-content:	space-between;
+	padding:					10px 5px;
+	color:					White;
+	font-weight:			bold;
+}
+.content {
+	display:					flex;
+	flex-wrap:				wrap;
+	justify-content:	space-between;
+	padding:					5px;
+}
+.content:nth-child(odd) {
+	background:			 #CCC;
+}
+.flex1 {
+	flex-basis:				100px;
+	font-weight:			bold
+}
+.flex2,
+.flex4 {
+	flex-basis:				100px;
+}
+.flex5,
+.flex6,
+.flex7 {
+	flex-basis:				50px;
+}
+.flex3 {
+	flex-basis:				200px;
+}

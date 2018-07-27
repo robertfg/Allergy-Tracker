@@ -5,13 +5,7 @@ const config     = require('./config');
 const path       = require('path');
 const mongoose   = require('mongoose');
 
-require('./models/user.model');
-
-// Routes
-const router  = require('./routes');
-const signup  = require('./routes/signup');
-const profile = require('./routes/profile');
-const admin   = require('./routes/admin');
+require('./models/user.model.js');
 
 // Create application object
 const app = express();

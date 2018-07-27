@@ -2,36 +2,141 @@
 const router   = require('express').Router();
 
 
-/*  **********  ROUTES  **********  */
+/*  **********  CRUD OPERATIONS  **********  */
 
-// GET /
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Home' });
+// ***** Create
+router.post('/user', (req, res, next) => {
+  // Use the data model
+  const User = mongoose.model('User');
+
+  // Set userData object
+  // const {userData } = req.body; This doesn't work!
+  const userData =	{
+    firstName:  req.body.firstName,
+    lastName:   req.body.lastName,
+    email:      req.body.email
+  };
+
+  // Add the new user to the database
+  User.create(userData, function(err, newUser) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+    res.json(newUser);
+  });
 });
 
-// GET /about
-router.get('/about', (req, res, next) => {
-  res.render('about', { title: 'About' });
+// ***** Read: /user/<id>
+router.get('/user/:userId', (req, res, next) => {
+  const { userId } = req.params;
+  const user = myUsers.find(entry => entry.id === userId);
+  if ( !user ) {
+    return res.status(404).end(`Could not find user '${userId}'`);
+  }
+  res.json(user);
 });
 
-// GET /contact
-router.get('/contact', (req, res, next) => {
-  res.render('contact', { title: 'Contact' });
+// ***** Update
+router.put('/user/:userId', (req, res, next) => {
+  // Use the data model
+  const User = mongoose.model('User');
+
+  // Deconstruct the userId from the parameters: /api/user/<user._id>
+  const { userId } = req.params;
+  
+  // Get the user
+  User.findById(userId, function(err, user) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+    if (!user) {
+      return res.status(404).json({message: "User not found"});
+    }
+  
+    // Set the other values
+    user.firstName  = req.body.firstName;
+    user.lastName   = req.body.lastName;
+    user.email      = req.body.email;
+ 
+    // Save the updates
+    user.save(function(err, savedUser) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json(err);
+      }
+      res.json(savedUser);
+    })
+  })
 });
 
-// GET /faqs
-router.get('/faqs', (req, res, next) => {
-  res.render('faqs', { title: 'FAQs' });
+router.put('/toggle/user/:userId', (req, res, next) => {
+  // Use the data model
+  const User = mongoose.model('User');
+
+  // Deconstruct the userId from the parameters: /api/user/<user._id>
+  const { userId } = req.params;
+  
+  // Get the user
+  User.findById(userId, function(err, user) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+    if (!user) {
+      return res.status(404).json({message: "User not found"});
+    }
+  
+    // Set the other values
+    user.deleted = user.deleted ? 0 : 1;
+ 
+    // Save the updates
+    user.save(function(err, savedUser) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json(err);
+      }
+      res.json(savedUser);
+    })
+  })
 });
 
-// GET /login
-router.get('/login', (req, res, next) => {
-  res.render('login', { title: 'Log In' });
+
+// Delete
+router.delete('/user/:userId', (req, res, next) => {
+  // Use the data model
+  const User = mongoose.model('User');
+
+  // Deconstruct the userId from the parameters: /api/user/<user._id>
+  const { userId } = req.params;
+  
+  // Get the user
+  User.findById(userId, (err, user) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+    if (!user) {
+      return res.status(404).json({message: "User not found."});
+    }
+
+    // Delete the user.
+    User.deleteOne( { "_id": userId }, err => res.json(user) );
+    // user.deleteOne( (err, doomedUser) => res.json(doomedUser) );
+  })
 });
 
-// GET /resources
-router.get('/resources', (req, res, next) => {
-  res.render('resources', { title: 'Resources' });
+// List
+router.get('/user', (req, res, next) => {
+  mongoose.model('User').find( { }, (err, users) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  
+  res.json(users);
+  });
 });
 
 
