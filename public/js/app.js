@@ -5,21 +5,30 @@ getUsers = () => {
     .then(users => {
       return users;
     })
-    .catch(error => console.error("GET USERS:", error));
+    .catch(error => console.error("Error getting users:", error));
 }
 
 // Render a list of users
-renderUsers = (users) => {
-  const listItems = users.map(user => `
-    <li class="list-group-item">
-      <strong>${user.lastName}</strong>, ${user.firstName}, ${user.email}
-      <span class="pull-right">
-        <button type="button" class="btn btn-xs btn-default" onclick="handleEditUserClick(this)"   data-userId="${user._id}">Edit</button>
-        <button type="button" class="btn btn-xs btn-danger"  onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Del</button>
-      </span>
-    </li>`);
-  const html = `<ul class="list-group">${listItems.join('')}</ul>`;
-  return html;
+renderUsers = users => {
+  const contentContainer = users.map(user => `
+    <div class="content">
+      <div class="flex1">${user.lastName}</div>
+      <div class="flex2">${user.firstName}</div>
+      <div class="flex3">${user.email}</div>
+      <div class="flex4">${user.deleted ? 'Inactive': 'Active'}</div>
+      <div class="flex5">
+        <button type="button" class="btn btn-xs btn-info" onclick="handleEditUserClick(this)" data-userId="${user._id}">Edit</button>
+      </div>
+      <div class="flex6">
+        <button type="button" class="btn btn-xs btn-warning" onclick="handleToggleUserClick(this)" data-userId="${user._id}">Toggle Status</button>
+      </div>
+      <div class="flex7">
+        <span class="pull-right">
+        <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
+      </div>
+    </div>
+    `);
+  return contentContainer;
 }
 
 // Fetch users from the API and render to the page: tie getUsers and renderUsers together
@@ -28,7 +37,7 @@ refreshUserList = () => {
   .then(users => {
     window.userList = users;
     const html = renderUsers(users);
-    $('#list-container').html(html);
+    $('#content-container').html(html);
   });
 }
 
@@ -36,9 +45,9 @@ refreshUserList = () => {
 setForm = ( data={} ) => {
   const user = {
     firstName: data.firstName || '',
-    lastName:  data.lastName || '',
-    email:     data.email || '',
-    _id:       data._id || ''
+    lastName:  data.lastName  || '',
+    email:     data.email     || '',
+    _id:       data._id       || ''
   };
 
   // Set values
@@ -55,8 +64,27 @@ setForm = ( data={} ) => {
   }
 }
 
+// Toggle user status
+toggleUser = userId => {
+  // Set the url for the user to delete
+  const url = '/api/toggle/user/' + userId;
+
+  // Toggle the active/inactive status.
+  fetch(url, {
+    method:   'PUT',
+    headers:  { 'Content-Type': 'application/json' },
+  })
+  .then(response => response.json())
+  .then(response => {
+    refreshUserList();
+  })
+  .catch(err => {
+    console.error("Unable to toggle the user's status.", err);
+  });
+}
+
 // Delete a user
-deleteUser = (userId) => {
+deleteUser = userId => {
   // Set the url for the user to delete
   const url = '/api/user/' + userId;
 
@@ -70,7 +98,7 @@ deleteUser = (userId) => {
     refreshUserList();
   })
   .catch(err => {
-    console.error("I'm not dead yet!", err);
+    console.error("Unable to delete the user.", err);
   });
 }
 
@@ -80,10 +108,10 @@ deleteUser = (userId) => {
 // Submit: add or update
 submitUserForm = () => {
   const userData = {
-    firstName: $('#user-firstName').val(),
-    lastName: $('#user-lastName').val(),
-    email: $('#user-email').val(),
-    _id: $('#user-id').val()
+    firstName:  $('#user-firstName').val(),
+    lastName:   $('#user-lastName').val(),
+    email:      $('#user-email').val(),
+    _id:        $('#user-id').val()
   };
 
   // Validate
@@ -123,7 +151,7 @@ submitUserForm = () => {
 cancelUserForm = () => setForm();
 
 // Edit
-handleEditUserClick = (element) => {
+handleEditUserClick = element => {
   const userId = element.getAttribute('data-userId');
   const user = window.userList.find(user => user._id === userId);
   if (user) {
@@ -131,8 +159,16 @@ handleEditUserClick = (element) => {
   }
 }
 
+// Toggle status
+handleToggleUserClick = element => {
+  const userId = element.getAttribute('data-userId');
+  if ( confirm("Are you sure?") ) {
+    toggleUser(userId);
+  }
+}
+
 // Delete
-handleDeleteUserClick = (element) => {
+handleDeleteUserClick = element => {
   const userId = element.getAttribute('data-userId');
   if ( confirm("Are you sure?") ) {
     deleteUser(userId);

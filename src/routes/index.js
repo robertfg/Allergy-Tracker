@@ -2,26 +2,6 @@
 const router   = require('express').Router();
 const mongoose = require('mongoose');
 
-// Simple router
-router.get('/', (req, res, next) => {
-  console.log('main page');
-  res.end("This is the main page.");
-});
-
-router.get('/about', (req, res, next) => {
-  console.log('about');
-  res.end("This is the about page.");
-});
-
-router.get('/blog', (req, res, next) => {
-  console.log('blog');
-  res.end("This is my first blog post.");
-}); 
-
-router.get('/faqs', (req, res, next) => {
-  console.log('faqs   ');
-  res.end("This is the FAQs page.");
-});
 
 /*  **********  CRUD OPERATIONS  **********  */
 
@@ -33,9 +13,9 @@ router.post('/user', (req, res, next) => {
   // Set userData object
   // const {userData } = req.body; This doesn't work!
   const userData =	{
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email
+    firstName:  req.body.firstName,
+    lastName:   req.body.lastName,
+    email:      req.body.email
   };
 
   // Add the new user to the database
@@ -77,9 +57,9 @@ router.put('/user/:userId', (req, res, next) => {
     }
   
     // Set the other values
-    user.firstName = req.body.firstName;
-    user.lastName  = req.body.lastName;
-    user.email     = req.body.email;
+    user.firstName  = req.body.firstName;
+    user.lastName   = req.body.lastName;
+    user.email      = req.body.email;
  
     // Save the updates
     user.save(function(err, savedUser) {
@@ -92,8 +72,7 @@ router.put('/user/:userId', (req, res, next) => {
   })
 });
 
-// Delete
-router.delete('/user/:userId', (req, res, next) => {
+router.put('/toggle/user/:userId', (req, res, next) => {
   // Use the data model
   const User = mongoose.model('User');
 
@@ -103,26 +82,55 @@ router.delete('/user/:userId', (req, res, next) => {
   // Get the user
   User.findById(userId, function(err, user) {
     if (err) {
+      console.error(err);
+      return res.status(500).json(err);
+    }
+    if (!user) {
+      return res.status(404).json({message: "User not found"});
+    }
+  
+    // Set the other values
+    user.deleted = user.deleted ? 0 : 1;
+ 
+    // Save the updates
+    user.save(function(err, savedUser) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json(err);
+      }
+      res.json(savedUser);
+    })
+  })
+});
+
+
+// Delete
+router.delete('/user/:userId', (req, res, next) => {
+  // Use the data model
+  const User = mongoose.model('User');
+
+  // Deconstruct the userId from the parameters: /api/user/<user._id>
+  const { userId } = req.params;
+  
+  // Get the user
+  User.findById(userId, (err, user) => {
+    if (err) {
       console.log(err);
       return res.status(500).json(err);
     }
     if (!user) {
-      return res.status(404).json({message: "File not found"});
+      return res.status(404).json({message: "User not found."});
     }
 
-    // Set the deleted field to true
-    user.deleted = true;
-
-    // Save the updates, i.e., mark as "deleted"
-    user.save(function(err, doomedUser) {
-      res.json(doomedUser);
-    })
+    // Delete the user.
+    User.deleteOne( { "_id": userId }, err => res.json(user) );
+    // user.deleteOne( (err, doomedUser) => res.json(doomedUser) );
   })
 });
 
 // List
 router.get('/user', (req, res, next) => {
-  mongoose.model('User').find( { deleted: {$ne: true} }, (err, users) => {
+  mongoose.model('User').find( { }, (err, users) => {
     if (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -131,6 +139,7 @@ router.get('/user', (req, res, next) => {
   res.json(users);
   });
 });
+
 
 /*  **********  EXPORTS **********  */
 module.exports = router;

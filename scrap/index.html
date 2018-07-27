@@ -14,25 +14,14 @@
 </head>
 <body>
 	<header>
-		<h1 class=" main container text-xs-center">Allergy Tracker</h1>
+		<h1>Allergy Tracker</h1>
 	</header>
 
 	<main>
-    <div class="main container">
-			<div class="header">
-				<div class="flex1">Last Name</div>
-				<div class="flex2">First Name</div>
-				<div class="flex3">Email Address</div>
-				<div class="flex4">Status</div>
-				<div class="flex5"></div>
-				<div class="flex6"></div>
-				<div class="flex7"></div>
-			</div>
-			<div id="content-container"></div>
-    </div>
+		<div id="list-container"></div>
 
 		<!-- Form -->
-		<div id="form-container" class="panel container">
+		<div id="form-container" class="panel">
 			<form id="add-file-form">
 				<legend id="form-label">User</legend>
 
@@ -49,13 +38,14 @@
 					<label for="user-email">Email:</label>
 					<input type="text" class="form-control" id="user-email" placeholder="Email Address">
 				</div>
+				<input type="hidden" id="file-id" value="" />
 
 				<!-- Hidden ID field -->
 				<input type="hidden" id="user-id" value="" />
 
 				<!-- Submit/Cancel buttons -->
 				<button type="button" onclick="submitUserForm()" class="btn btn-success">Submit</button>
-				<button type="button" onclick="cancelUserForm()" class="btn btn-link">Cancel</button>
+				<button type="button" onclick="cancelUserForm()" class="btn btn-link">cancel</button>
 			</form>
 		</div>
 	</main>
