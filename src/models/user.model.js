@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   firstName:  String,
   lastName:   String,
   email:      String,
+  allergy:    String,
   created_at: { type: Date, default: Date.now },
   deleted:    { type: Boolean, default: false }
 });

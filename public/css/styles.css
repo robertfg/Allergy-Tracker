@@ -24,14 +24,15 @@
 	font-weight:			bold
 }
 .flex2,
-.flex4 {
+.flex5 {
 	flex-basis:				100px;
 }
-.flex5,
 .flex6,
-.flex7 {
+.flex7,
+.flex8 {
 	flex-basis:				50px;
 }
-.flex3 {
+.flex3,
+.fles4 {
 	flex-basis:				200px;
 }

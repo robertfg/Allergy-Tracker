@@ -15,14 +15,15 @@ renderUsers = users => {
       <div class="flex1">${user.lastName}</div>
       <div class="flex2">${user.firstName}</div>
       <div class="flex3">${user.email}</div>
-      <div class="flex4">${user.deleted ? 'Inactive': 'Active'}</div>
-      <div class="flex5">
+      <div class="flex4">${user.allergy}</div>
+      <div class="flex5">${user.deleted ? 'Inactive': 'Active'}</div>
+      <div class="flex6">
         <button type="button" class="btn btn-xs btn-info" onclick="handleEditUserClick(this)" data-userId="${user._id}">Edit</button>
       </div>
-      <div class="flex6">
+      <div class="flex7">
         <button type="button" class="btn btn-xs btn-warning" onclick="handleToggleUserClick(this)" data-userId="${user._id}">Toggle Status</button>
       </div>
-      <div class="flex7">
+      <div class="flex8">
         <span class="pull-right">
         <button type="button" class="btn btn-xs btn-danger" onclick="handleDeleteUserClick(this)" data-userId="${user._id}">Delete</button>
       </div>
@@ -47,14 +48,16 @@ setForm = ( data={} ) => {
     firstName: data.firstName || '',
     lastName:  data.lastName  || '',
     email:     data.email     || '',
+    allergy:   data.allergy   || '',
     _id:       data._id       || ''
   };
 
   // Set values
-  $('#user-firstName').val(user.firstName),
-  $('#user-lastName').val(user.lastName),
-  $('#user-email').val(user.email)
-  $('#user-id').val(user._id)
+  $('#user-firstName').val(user.firstName);
+  $('#user-lastName').val(user.lastName);
+  $('#user-email').val(user.email);
+  $('#user-allergy').val(user.allergy);
+  $('#user-id').val(user._id);
 
   // Change legend
   if (user._id) {
@@ -111,11 +114,15 @@ submitUserForm = () => {
     firstName:  $('#user-firstName').val(),
     lastName:   $('#user-lastName').val(),
     email:      $('#user-email').val(),
+    allergy:    $('#user-allergy').val(),
     _id:        $('#user-id').val()
   };
 
   // Validate
-  if ( userData.firstName === ''  ||  userData.lastName ===  ''  || userData.email === '' ) {
+  if ( userData.firstName === ''  ||
+       userData.lastName  === ''  ||
+       userData.email     === ''  ||
+       userData.allergy   === ''  ) {
     alert("You must complete all fields!");
     setForm();
     return;

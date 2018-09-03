@@ -15,7 +15,8 @@ router.post('/user', (req, res, next) => {
   const userData =	{
     firstName:  req.body.firstName,
     lastName:   req.body.lastName,
-    email:      req.body.email
+    email:      req.body.email,
+    allergy:    req.body.allergy
   };
 
   // Add the new user to the database
@@ -60,6 +61,7 @@ router.put('/user/:userId', (req, res, next) => {
     user.firstName  = req.body.firstName;
     user.lastName   = req.body.lastName;
     user.email      = req.body.email;
+    allergy         = req.body.allergy;
  
     // Save the updates
     user.save(function(err, savedUser) {
